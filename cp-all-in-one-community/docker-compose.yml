@@ -72,6 +72,30 @@ services:
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+    command: 
+      - bash 
+      - -c 
+      - |
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.0.1
+        /etc/confluent/docker/run
+
+  sqlsource:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: sqlsource
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+
+  sqlsink:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: sqlsink
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "2433:1433"
 
   ksqldb-server:
     image: confluentinc/cp-ksqldb-server:6.0.1
